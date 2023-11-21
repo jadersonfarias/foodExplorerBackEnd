@@ -1,6 +1,6 @@
 exports.up = (knex) =>
   knex.schema.createTable("dishes", (table) => {
-    table.uuid("id")
+    table.uuid("id");
     table.text("name").notNullable();
     table.text("description").notNullable();
     table.text("category").notNullable();
@@ -8,7 +8,9 @@ exports.up = (knex) =>
     table.text("image").default(null);
 
     table.uuid("user_id").references("id").inTable("users");
+    // table.uuid("user_id").unsigned();
 
+    // table.foreign("user_id").references("users.id");
 
     table.timestamp("created_at").default(knex.fn.now());
     table.timestamp("updated_at").default(knex.fn.now());
