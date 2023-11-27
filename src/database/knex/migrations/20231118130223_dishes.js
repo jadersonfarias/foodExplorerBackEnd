@@ -1,6 +1,5 @@
 exports.up = (knex) =>
   knex.schema.createTable("dishes", (table) => {
-    //table.uuid("id");
     table.increments('id').primary();
     table.text("name").notNullable();
     table.text("description").notNullable();
