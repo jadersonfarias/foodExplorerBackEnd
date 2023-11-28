@@ -2,10 +2,10 @@ const { request, response } = require("express");
 const knex = require("../database/knex");
 const { v4: uuidv4 } = require("uuid");
 
-
 class DishesController {
   async create(request, response) {
-    const { name, title, description, ingredients, category, price } = request.body;
+    const { name, title, description, ingredients, category, price } =
+      request.body;
     const { user_id } = request.params;
 
     const [dish_id] = await knex("dishes").insert({
@@ -16,7 +16,6 @@ class DishesController {
       price,
       user_id,
     });
-
 
     const ingredientsInsert = ingredients.map((title) => {
       return {
@@ -38,7 +37,7 @@ class DishesController {
     const ingredients = await knex("ingredients")
       .where({ dish_id: id })
       .orderBy("title"); //orderby organiza por ordem alfabetica
-   
+
     return response.json({
       ...dishes,
       ingredients,
