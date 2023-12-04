@@ -6,7 +6,8 @@ class DishesController {
   async create(request, response) {
     const { name, title, description, ingredients, category, price } =
       request.body;
-    const { user_id } = request.params;
+    //const { user_id } = request.params;
+    const user_id = request.user.id;
 
     const [dish_id] = await knex("dishes").insert({
       // id: uuidv4(),
@@ -21,7 +22,7 @@ class DishesController {
       return {
         dish_id,
         title,
-        user_id,
+      
       };
     });
 
@@ -53,8 +54,10 @@ class DishesController {
   }
 
   async index(request, response) {
-    const { name, user_id, ingredients } = request.query;
+    const { name, ingredients } = request.query;
 
+    const user_id = request.user.id;
+    console.log(ingredients);
     let dishes;
 
     if (ingredients) {
@@ -63,13 +66,15 @@ class DishesController {
         .map((ingredient) => ingredient.trim());
 
       dishes = await knex("ingredients")
-        .select(["dishes.id", "dishes.name", "dishes.user_id"])
-        .innerJoin("dishes", "dishes.id", "ingredients.dish_id")
-        .where("dishes.user_id", user_id) //tags que seja do id do user
-        .whereLike("dishes.name", `%${name}%`)
+        //.select("*")
         .whereIn("title", filterIngredients)
-        .orderBy("ingredients.title")
+         .orderBy("ingredients.title")
+         .innerJoin("dishes", "dishes.id", "ingredients.dish_id")
+         .select(["dishes.id","dishes.description", "dishes.price", "dishes.name", "dishes.user_id"])
+         .where("dishes.user_id", user_id) 
+         .whereLike("dishes.name", `%${name}%`)
         .groupBy("dishes.id");
+      console.log(dishes);
     } else {
       dishes = await knex("dishes")
         .where({ user_id })
@@ -77,7 +82,7 @@ class DishesController {
         .whereLike("name", `%${name}%`); //se qualquer parte da pesquisa bater entra aki
     }
 
-    const userIngredients = await knex("ingredients").where({ user_id });
+    const userIngredients = await knex("ingredients").select("*");
 
     const dishesWithIngredients = dishes.map((dish) => {
       const dishesIngredients = userIngredients.filter(

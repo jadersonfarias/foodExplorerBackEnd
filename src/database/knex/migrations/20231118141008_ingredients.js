@@ -6,7 +6,7 @@ exports.up = (knex) =>
 
     //table.uuid('dish_id').references('id').inTable('dishes').onDelete('CASCADE')
     table.integer('dish_id').references('id').inTable('dishes').onDelete('CASCADE')
-    table.integer("user_id").references("id").inTable("users")
+    //table.integer("user_id").references("id").inTable("users")
 
     table.timestamp('createdAt').default(knex.fn.now())
     table.timestamp('updatedAt').default(knex.fn.now())
