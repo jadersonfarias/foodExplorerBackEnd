@@ -1,7 +1,5 @@
-
 const knex = require("../database/knex");
-const DiskStorage = require('../providers/DiskStorage')
-
+const DiskStorage = require("../providers/DiskStorage");
 
 class DishesController {
   async create(request, response) {
@@ -10,11 +8,11 @@ class DishesController {
     const user_id = request.user.id;
 
     //const avatarFilename = request.file.filename;
-    const { filename: avatarFilename } = request.file
+    const { filename: avatarFilename } = request.file;
 
     const diskStorage = new DiskStorage();
 
-    const filename = await diskStorage.saveFile(avatarFilename)
+    const filename = await diskStorage.saveFile(avatarFilename);
 
     const [dish_id] = await knex("dishes").insert({
       // id: uuidv4(),
@@ -29,13 +27,13 @@ class DishesController {
     const ingredientsInsert = ingredients.map((ingredient) => {
       return {
         dish_id,
-        title: ingredient, 
+        title: ingredient,
       };
     });
 
-  //}else {
-  //  console.error('Ingredients não é um array:', ingredients);
- // }
+    //}else {
+    //  console.error('Ingredients não é um array:', ingredients);
+    // }
 
     await knex("ingredients").insert(ingredientsInsert);
 
@@ -65,78 +63,80 @@ class DishesController {
   }
 
   async index(request, response) {
-    let { search } = request.query // add ingredients
+    let { search } = request.query; // add ingredients
     if (search === undefined) {
-      search = ''
+      search = "";
     }
 
     const dishes = await knex
-      .select('dishes.*')
-      .from('dishes')
-      .innerJoin('ingredients', 'dishes.id', '=', 'ingredients.dish_id')
-      .whereLike('dishes.name', `%${search}%`)
-      .orWhereLike('ingredients.title', `%${search}%`)
-      .groupBy('dishes.name')
+      .select("dishes.*")
+      .from("dishes")
+      .innerJoin("ingredients", "dishes.id", "=", "ingredients.dish_id")
+      .whereLike("dishes.name", `%${search}%`)
+      .orWhereLike("ingredients.title", `%${search}%`)
+      .groupBy("dishes.name");
 
-    return response.json(dishes)
+    return response.json(dishes);
   }
 
-  async update(req, res) {
-    const { name, category, price, description, ingredients, image } = req.body
-    const { id } = req.params
+  async update(request, response) {
+    const { name, category, price, description, ingredients, image } =
+      request.body;
+    const { id } = request.params;
 
-    const dish = await knex('dishes').where({ id }).first()
+    const dish = await knex("dishes").where({ id }).first();
 
-    let filename = ''
+    let filename = "";
 
-    if (req.file && req.file.filename) {
-      const imageFilename = req.file.filename
-      const diskStorage = new DiskStorage()
+    if (request.file && request.file.filename) {
+      const imageFilename = request.file.filename;
+      const diskStorage = new DiskStorage();
 
       if (dish && dish.image) {
-        await diskStorage.deleteFile(dish.image)
+        await diskStorage.deleteFile(dish.image);
       }
 
-      filename = await diskStorage.saveFile(imageFilename)
+      filename = await diskStorage.saveFile(imageFilename);
     }
 
-    dish.image = filename ?? dish.image
-    dish.name = name ?? dish.name
-    dish.category = category ?? dish.category
-    dish.price = price ?? dish.price
-    dish.description = description ?? dish.description
-    dish.image = image ?? dish.image
+    dish.image = filename ?? dish.image;
+    dish.name = name ?? dish.name;
+    dish.category = category ?? dish.category;
+    dish.price = price ?? dish.price;
+    dish.description = description ?? dish.description;
+    dish.image = image ?? dish.image;
 
-    await knex('dishes').where({ id }).update(dish)
-    await knex('dishes').where({ id }).update('updated_at', knex.fn.now())
+    await knex("dishes").where({ id }).update(dish);
+    await knex("dishes").where({ id }).update("updated_at", knex.fn.now());
 
-    const hasOnlyOneIngredient = typeof ingredients === 'string'
+    const hasOnlyOneIngredient = typeof ingredients === "string";
 
-    let ingredientsUpdated
+    let ingredientsUpdated;
 
     if (hasOnlyOneIngredient) {
       ingredientsUpdated = {
         dishId: dish.id,
         title: ingredients,
-      }
+      };
     } else if (ingredients.length >= 1) {
       ingredientsUpdated = ingredients.map((ingredient) => {
         return {
           dish_id: dish.id,
           title: ingredient,
-        }
-      })
+        };
+      });
 
-      await knex('ingredients').where({ dish_id: id }).delete()
-      await knex('ingredients').where({ dish_id: id }).insert(ingredientsUpdated)
+      await knex("ingredients").where({ dish_id: id }).delete();
+      await knex("ingredients")
+        .where({ dish_d: id })
+        .insert(ingredientsUpdated);
     }
 
-    return res.json()
+    return response.json();
   }
 }
 
 module.exports = DishesController;
-
 
 // async index(request, response) {
 //   const { name, ingredients } = request.query;
@@ -157,10 +157,10 @@ module.exports = DishesController;
 //       .orderBy("ingredients.title")
 //       .innerJoin("dishes", "dishes.id", "ingredients.dish_id")
 //       .select(["dishes.id","dishes.description", "dishes.price", "dishes.name", "dishes.user_id"])
-//       .where("dishes.user_id", user_id) 
+//       .where("dishes.user_id", user_id)
 //       .whereLike("dishes.name", `%${name}%`)
-//       .groupBy("dishes.id"); 
-      
+//       .groupBy("dishes.id");
+
 //   }else if(name){
 //     dishes = await knex("dishes")
 //     .where({user_id})
