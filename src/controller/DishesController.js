@@ -1,11 +1,16 @@
 const knex = require("../database/knex");
 const DiskStorage = require("../providers/DiskStorage");
+const AppError = require("../utils/AppError")
 
 class DishesController {
   async create(request, response) {
     const { name, description, ingredients, category, price } = request.body;
     //const { user_id } = request.params;
     const user_id = request.user.id;
+    
+    if(isNaN(price)){
+      throw new AppError("Não é um número ", 400)
+  }
 
     //const avatarFilename = request.file.filename;
     const { filename: avatarFilename } = request.file;
@@ -13,7 +18,7 @@ class DishesController {
     const diskStorage = new DiskStorage();
 
     const filename = await diskStorage.saveFile(avatarFilename);
-
+  
     const [dish_id] = await knex("dishes").insert({
       // id: uuidv4(),
       image: filename,
@@ -80,12 +85,12 @@ class DishesController {
   }
 
   async update(request, response) {
-    const { name, category, price, description, ingredients, image } =
-      request.body;
+    const { name, category, price, description, ingredients, image } = request.body;
     const { id } = request.params;
 
     const dish = await knex("dishes").where({ id }).first();
 
+    // Lógica para atualizar a imagem do prato, se fornecida
     let filename = "";
 
     if (request.file && request.file.filename) {
@@ -106,11 +111,13 @@ class DishesController {
     dish.description = description ?? dish.description;
     dish.image = image ?? dish.image;
 
+    // Atualizando o prato no banco de dados
     await knex("dishes").where({ id }).update(dish);
     await knex("dishes").where({ id }).update("updated_at", knex.fn.now());
 
     const hasOnlyOneIngredient = typeof ingredients === "string";
 
+    // Lógica para criar um objeto com o ingrediente, se for o caso
     let ingredientsUpdated;
 
     if (hasOnlyOneIngredient) {
@@ -118,7 +125,7 @@ class DishesController {
         dishId: dish.id,
         title: ingredients,
       };
-    } else if (ingredients.length >= 1) {
+    } else if (ingredients.length >= 1) { // Lógica para atualizar a lista de ingredientes no banco de dados
       ingredientsUpdated = ingredients.map((ingredient) => {
         return {
           dish_id: dish.id,
