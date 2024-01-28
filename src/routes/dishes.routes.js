@@ -14,15 +14,16 @@ const upload = multer(uploadConfig.MULTER)
 
 const userImageController = new UserImageController();
 const dishesController = new DishesController();
+//dishesRoutes.use(verifyUserAuthorization("admin")) todas as rotas daqui
 
 dishesRoutes.use(ensureAuthenticated)
 
 
-dishesRoutes.post('/', verifyUserAuthorization("admin"), upload.single('image'), dishesController.create)
+dishesRoutes.post('/', verifyUserAuthorization(["admin"]), upload.single('image'), dishesController.create)
 dishesRoutes.get('/:id', dishesController.show)
-dishesRoutes.delete('/:id',verifyUserAuthorization("admin"), dishesController.delete)
+dishesRoutes.delete('/:id',verifyUserAuthorization(["admin"]), dishesController.delete)
 dishesRoutes.get('/', dishesController.index)
-dishesRoutes.patch("/image",verifyUserAuthorization("admin"), upload.single('image'), userImageController.update)
+dishesRoutes.patch("/image",verifyUserAuthorization(["admin"]), upload.single('image'), userImageController.update)
 
 dishesRoutes.put(
     '/:id',
