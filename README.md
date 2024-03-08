@@ -90,12 +90,11 @@ $ npm start
 
 Este projeto está sob a licença MIT.
 
-www.linkedin.com/in/jaderson-farias
 
 
 <div style="display: flex;">
-  <a href="https://www.linkedin.com/in/jaderson-farias" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the- 
- badge&logo=linkedin&logoColor=white" style="margin-right: 2vw" target="_blank"></a>
+ <a href="https://www.linkedin.com/in/jaderson-farias/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" style="margin-right: 2vw" target="_blank"></a>
   <a href="mailto:jader375@gmail.com"><img src="https://img.shields.io/badge/-Gmail-%23333?style=for-the-badge&logo=gmail&logoColor=white" style="margin-right: 2vw" target="_blank"></a>
-
 </div>
+
+  
