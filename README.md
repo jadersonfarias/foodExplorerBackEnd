@@ -50,7 +50,7 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 
 <h2 id="usage">💡 Utilização</h2>
 
-O back-end do projeto está hospedado no endereço https://foodexplorer4llves.onrender.com A aplicação Food Explorer está disponível para uso [aqui](https://foodexplorer.4llves.dev/).
+O back-end do projeto está hospedado no endereçohttps://foodexplorerbackend-p5cx.onrender.com A aplicação Food Explorer está disponível para uso [aqui](https://foodexplorerbackend-p5cx.onrender.com).
 
 ⚠️ **Importante**: Este projeto utiliza uma hospedagem gratuita para o back-end, portanto, pode haver atrasos no tempo de resposta do servidor.
 
