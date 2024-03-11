@@ -20,7 +20,6 @@ class DishesController {
     const filename = await diskStorage.saveFile(avatarFilename);
   
     const [dish_id] = await knex("dishes").insert({
-      // id: uuidv4(),
       image: filename,
       name,
       description,
@@ -36,9 +35,7 @@ class DishesController {
       };
     });
 
-    //}else {
-    //  console.error('Ingredients não é um array:', ingredients);
-    // }
+
 
     await knex("ingredients").insert(ingredientsInsert);
 
@@ -145,55 +142,3 @@ class DishesController {
 
 module.exports = DishesController;
 
-// async index(request, response) {
-//   const { name, ingredients } = request.query;
-
-//   const user_id = request.user.id;
-//   console.log(user_id)
-
-//   let dishes;
-
-//   if (ingredients) {
-//     const filterIngredients = ingredients
-//       .split(",")
-//       .map((ingredient) => ingredient.trim());
-
-//     dishes = await knex("ingredients")
-//       .select("*")
-//       .whereIn("title", filterIngredients)
-//       .orderBy("ingredients.title")
-//       .innerJoin("dishes", "dishes.id", "ingredients.dish_id")
-//       .select(["dishes.id","dishes.description", "dishes.price", "dishes.name", "dishes.user_id"])
-//       .where("dishes.user_id", user_id)
-//       .whereLike("dishes.name", `%${name}%`)
-//       .groupBy("dishes.id");
-
-//   }else if(name){
-//     dishes = await knex("dishes")
-//     .where({user_id})
-//     .andWhere({name})
-//     .orderBy("name")
-//   } else {
-//     dishes = await knex("dishes")
-//       .where({user_id})
-//       .orderBy("name")
-//       //.whereLike("name", `%${name}%`); //se qualquer parte da pesquisa bater entra aki
-//       console.log("Entrou")
-//     }
-// console.log(dishes)
-//   const userIngredients = await knex("ingredients").select("*");
-
-//   const dishesWithIngredients = dishes.map((dish) => {
-//     const dishesIngredients = userIngredients.filter(
-//       (ingredient) => ingredient.dish_id === dish.id
-//     );
-
-//     return {
-//       ...dish,
-//       ingredients: dishesIngredients,
-//     };
-//   });
-
-//   return response.json(dishesWithIngredients);
-// }
-// }
