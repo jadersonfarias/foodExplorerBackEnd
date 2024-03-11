@@ -19,8 +19,10 @@
 
 <h2 id="project">📁 Projeto</h2>
 
+<h3> - Imagem do projeto 😁 </h3>
+
 <p align="center">
-  <img alt="License" src="https://github.com/jadersonfarias/foodExplorerBackEnd /raw/main/src/assets/Imgem-do-projeto.png">
+  <img alt="License" src="./src/assets/Imgem-do-projeto.png">
 </p>
 
 O projeto Food Explorer consiste no desafio final do programa Explorer da Rocketseat. Trata-se de uma aplicação de cardápio digital para um restaurante fictício.
